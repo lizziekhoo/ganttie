@@ -175,10 +175,6 @@ const DesignerTaskList: React.FC<DesignerTaskListProps> = ({ designerId }) => {
         return tasks.filter((task) => !task.completed);
       case 'completed':
         return tasks.filter((task) => task.completed);
-      case 'work':
-        return tasks.filter((task) => task.category === 'work');
-      case 'personal':
-        return tasks.filter((task) => task.category === 'personal');
       default:
         return tasks;
     }
@@ -266,12 +262,10 @@ const DesignerTaskList: React.FC<DesignerTaskListProps> = ({ designerId }) => {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="active">Active</TabsTrigger>
               <TabsTrigger value="completed">Completed</TabsTrigger>
-              <TabsTrigger value="work">Work</TabsTrigger>
-              <TabsTrigger value="personal">Personal</TabsTrigger>
             </TabsList>
 
             <TabsContent value={activeTab} className="mt-4 space-y-2">

@@ -17,8 +17,10 @@ export const initialProjects = [
   { id: "project-l", name: "Project L", description: "Details here about the project.", href: "/gantt/project-l", cta: "Open", background: <img className="absolute -right-20 -top-20 opacity-60" /> },
 ];
 
+import type { GridProject } from "@/lib/custom-projects";
+
 interface BentoDemoProps {
-  projects: typeof initialProjects;
+  projects: GridProject[];
   editMode?: boolean;
   selectedIds?: Set<string>;
   toggleSelect?: (id: string) => void;

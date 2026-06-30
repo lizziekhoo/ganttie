@@ -1,4 +1,4 @@
-import type { ActionItem, Task } from "@/components/projects/interior-design-project";
+import type { Task } from "@/components/projects/interior-design-project";
 
 export interface Project {
   id: string;
@@ -12,11 +12,10 @@ export interface Project {
   budget: string;
   description: string;
   tasks?: Task[];
-  actionItems?: ActionItem[];
 }
 
 // Demo seed data (project-a). Source of truth — reused by the component's
-// defaultProjectData so the demo tasks/VOs/action items live in one place.
+// defaultProjectData so the demo tasks/VOs/subtasks live in one place.
 export const demoProjectTasks: Task[] = [
   {
     id: '1',
@@ -27,9 +26,9 @@ export const demoProjectTasks: Task[] = [
     originalEndDate: '2024-01-22',
     phase: 'Phase 1',
     scope: 'Planning',
+    dependency: null,
     duration: 7,
     assignee: 'Design Team',
-    category: 'Planning',
     budget: 2500,
     lastUpdated: '2024-01-22',
     subTasks: [
@@ -45,9 +44,9 @@ export const demoProjectTasks: Task[] = [
     originalEndDate: '2024-01-26',
     phase: 'Phase 1',
     scope: 'Planning',
+    dependency: '1',
     duration: 3,
     assignee: 'Site Team',
-    category: 'Planning',
     budget: 800,
     lastUpdated: '2024-01-26',
     variationOrders: [
@@ -71,9 +70,9 @@ export const demoProjectTasks: Task[] = [
     originalEndDate: '2024-02-10',
     phase: 'Phase 1',
     scope: 'Design',
+    dependency: '2',
     duration: 14,
     assignee: 'Design Team',
-    category: 'Design',
     budget: 8500,
     lastUpdated: '2024-02-10',
     subTasks: [
@@ -90,9 +89,9 @@ export const demoProjectTasks: Task[] = [
     originalEndDate: '2024-02-25',
     phase: 'Phase 2',
     scope: 'Procurement',
+    dependency: '3',
     duration: 14,
     assignee: 'Procurement',
-    category: 'Procurement',
     budget: 12000,
     lastUpdated: '2024-02-25',
     variationOrders: [
@@ -125,9 +124,9 @@ export const demoProjectTasks: Task[] = [
     originalEndDate: '2024-03-05',
     phase: 'Phase 2',
     scope: 'Construction',
+    dependency: '4',
     duration: 8,
     assignee: 'Construction',
-    category: 'Construction',
     budget: 4500,
     lastUpdated: '2024-03-05',
     variationOrders: [
@@ -151,9 +150,9 @@ export const demoProjectTasks: Task[] = [
     originalEndDate: '2024-03-13',
     phase: 'Phase 2',
     scope: 'Electrical',
+    dependency: '5',
     duration: 14,
     assignee: 'Electrical Team',
-    category: 'Construction',
     budget: 6200,
     lastUpdated: '2024-03-18',
     delays: [
@@ -195,9 +194,9 @@ export const demoProjectTasks: Task[] = [
     originalEndDate: '2024-03-28',
     phase: 'Phase 2',
     scope: 'Flooring',
+    dependency: '6',
     duration: 13,
     assignee: 'Construction',
-    category: 'Construction',
     budget: 7800,
     lastUpdated: '2024-03-10', // Intentionally stale (8+ days ago)
     delays: [
@@ -217,9 +216,9 @@ export const demoProjectTasks: Task[] = [
     originalEndDate: '2024-04-17',
     phase: 'Phase 3',
     scope: 'Installation',
+    dependency: '7',
     duration: 13,
     assignee: 'Installation Team',
-    category: 'Installation',
     budget: 15000,
     lastUpdated: '2024-03-01',
     subTasks: [
@@ -235,9 +234,9 @@ export const demoProjectTasks: Task[] = [
     originalEndDate: '2024-04-25',
     phase: 'Phase 3',
     scope: 'Finishing',
+    dependency: '8',
     duration: 7,
     assignee: 'Design Team',
-    category: 'Finishing',
     budget: 3500,
     lastUpdated: '2024-02-20'
   },
@@ -250,20 +249,12 @@ export const demoProjectTasks: Task[] = [
     originalEndDate: '2024-04-30',
     phase: 'Phase 3',
     scope: 'Handover',
+    dependency: '9',
     duration: 4,
     assignee: 'Project Manager',
-    category: 'Completion',
     budget: 1200,
     lastUpdated: '2024-02-15'
   }
-];
-
-export const demoActionItems: ActionItem[] = [
-  { id: 'ai-1', text: 'Call electrician to confirm panel upgrade schedule', done: true, assignee: 'Alex Electrician' },
-  { id: 'ai-2', text: 'Order additional recessed light fixtures for reading nook', done: true },
-  { id: 'ai-3', text: 'Follow up with client on marble flooring sample approval', done: false, assignee: 'Sarah Johnson' },
-  { id: 'ai-4', text: 'Schedule final inspection with the city', done: false },
-  { id: 'ai-5', text: 'Send revised mood board for sign-off', done: false, assignee: 'Design Team' }
 ];
 
 export const DEFAULT_PROJECTS: Project[] = [
@@ -278,8 +269,7 @@ export const DEFAULT_PROJECTS: Project[] = [
     endDate: '2024-04-30',
     budget: '$85,000',
     description: 'Complete renovation of a 2,500 sq ft living space featuring modern minimalist design with natural materials, neutral color palette, and smart home integration.',
-    tasks: demoProjectTasks,
-    actionItems: demoActionItems
+    tasks: demoProjectTasks
   },
   {
     id: 'project-b',
@@ -291,7 +281,14 @@ export const DEFAULT_PROJECTS: Project[] = [
     startDate: '2024-02-01',
     endDate: '2024-05-15',
     budget: '$120,000',
-    description: 'Full kitchen remodel with custom cabinetry, high-end appliances, and an open-concept dining area for family gatherings.'
+    description: 'Full kitchen remodel with custom cabinetry, high-end appliances, and an open-concept dining area for family gatherings.',
+    tasks: [
+      { id: 'b1', name: 'Cabinetry Design', status: 'completed', startDate: '2024-02-01', endDate: '2024-02-15', duration: 14, assignee: 'Design Team', scope: 'Design', phase: 'Phase 1' },
+      { id: 'b2', name: 'Kitchen Demolition', status: 'completed', startDate: '2024-02-16', endDate: '2024-02-28', duration: 12, assignee: 'Construction', scope: 'Construction', phase: 'Phase 1' },
+      { id: 'b3', name: 'Plumbing Rough-in', status: 'in-progress', startDate: '2024-03-01', endDate: '2024-03-20', duration: 20, assignee: 'Plumbing Team', scope: 'Plumbing', phase: 'Phase 2' },
+      { id: 'b4', name: 'Countertop Installation', status: 'pending', startDate: '2024-04-01', endDate: '2024-04-15', duration: 14, assignee: 'Construction', scope: 'Finishing', phase: 'Phase 2' },
+      { id: 'b5', name: 'Appliance Installation', status: 'pending', startDate: '2024-05-01', endDate: '2024-05-10', duration: 10, assignee: 'Installation Team', scope: 'Installation', phase: 'Phase 3' }
+    ]
   },
   {
     id: 'project-c',
